@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
-import { IEnumerable } from 'typescript-extended-linq';
+import { IArrayExtensions, IEnumerable } from 'typescript-extended-linq';
 
 declare global {
-  interface Array<T> extends Omit<IEnumerable<T>, 'forEach' | 'toString' | 'toJSON' | symbol> {}
+  interface Array<T> extends Omit<IEnumerable<T>, 'forEach' | 'toString' | 'toJSON' | symbol>, IArrayExtensions<T> {}
   interface Int8Array extends Omit<IEnumerable<number>, 'forEach' | 'toString' | 'toJSON' | symbol> {}
   interface Int16Array extends Omit<IEnumerable<number>, 'forEach' | 'toString' | 'toJSON' | symbol> {}
   interface Int32Array extends Omit<IEnumerable<number>, 'forEach' | 'toString' | 'toJSON' | symbol> {}

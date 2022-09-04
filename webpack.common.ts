@@ -38,6 +38,9 @@ const commonConfig: Configuration = {
       }
     ]
   },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js']
+  },
   output: {
     filename: 'bundle.js',
     path: resolve(__dirname, 'dist')

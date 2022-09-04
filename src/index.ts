@@ -22,6 +22,8 @@ import earthCloud from './assets/images/earth/earthClouds.png';
 import marsImage from './assets/images/mars/mars.jpg';
 import sunImage from './assets/images/sun/sun.jpg';
 import backgroundImage from './assets/images/background.jpg';
+import { GameEngine } from './engine/GameEngine';
+import { SceneOne } from './scenes/SceneOne';
 
 bindLinqToNativeTypes();
 
@@ -91,40 +93,40 @@ async function getSun(loader: TextureLoader): Promise<Mesh> {
 }
 
 async function main(): Promise<void> {
-  const scene = new Scene();
-  const camera = new PerspectiveCamera(10, window.innerWidth / window.innerHeight, 0.1, 1000);
-  const renderer = new WebGLRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+  //const scene = new Scene();
+  const scene = new SceneOne();
+  const gameEngine = new GameEngine();
 
   const loader = new TextureLoader();
 
   const backgroundTexture = await loader.loadAsync(backgroundImage);
   scene.background = backgroundTexture;
 
-  const earth = await getEarthMesh(loader);
-  const mars = await getMars(loader);
-  const sun = await getSun(loader);
+  // const earth = await getEarthMesh(loader);
+  // const mars = await getMars(loader);
+  // const sun = await getSun(loader);
 
-  scene.add(sun, mars, earth);
+  // scene.add(sun, mars, earth);
 
-  earth.translateX(-3);
-  mars.translateX(4);
+  // earth.translateX(-3);
+  // mars.translateX(4);
 
-  sun.translateX(0);
+  // sun.translateX(0);
 
-  camera.position.z = 50;
+  //camera.position.z = 50;
 
-  function animate(): void {
-    requestAnimationFrame(animate);
+  await gameEngine.loadScene(scene);
 
-    earth.rotation.y += 0.005;
-    //cloudMesh.rotation.y += 0.006;
+  // function animate(): void {
+  //   requestAnimationFrame(animate);
 
-    renderer.render(scene, camera);
-  }
+  //   earth.rotation.y += 0.005;
+  //   //cloudMesh.rotation.y += 0.006;
 
-  animate();
+  //   renderer.render(scene, camera);
+  // }
+
+  // animate();
 
   //const material = new MeshBasicMaterial({ color: 0xffff00 });
   // const earth = new Mesh(geometry, material);
