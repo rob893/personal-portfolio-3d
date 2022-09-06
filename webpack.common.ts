@@ -13,6 +13,18 @@ const commonConfig: Configuration = {
         exclude: /node_modules/
       },
       {
+        test: /\.(glb|gltf)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'assets/models'
+            }
+          }
+        ],
+        exclude: /node_modules/
+      },
+      {
         test: /\.(png|svg|jpg|gif)$/,
         use: [
           {

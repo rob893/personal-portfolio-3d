@@ -1,4 +1,4 @@
-import { Mesh, MeshBasicMaterial, PointLight, SphereGeometry, Texture } from 'three';
+import { Mesh, MeshBasicMaterial, Object3D, PointLight, SphereGeometry, Texture } from 'three';
 import { Rotator } from '../components/Rotator';
 import { Component } from '../engine/core/components/Component';
 import { GameObject } from '../engine/core/GameObject';
@@ -21,7 +21,7 @@ export class Sun extends GameObject {
     return [new Rotator(this)];
   }
 
-  protected override getMesh(_config: GameObjectConstructionParams): Mesh | undefined {
+  protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
     const geometry = new SphereGeometry(1, 32, 32);
 
     const texture = this.getAsset('sunTexture', Texture);
@@ -34,7 +34,7 @@ export class Sun extends GameObject {
 
     const sun = new Mesh(geometry, sunMesh);
 
-    const light = new PointLight(0xffffff, 1, 10);
+    const light = new PointLight(0xffffff, 2, 10);
     sun.add(light);
 
     return sun;

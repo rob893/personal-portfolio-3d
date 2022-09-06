@@ -1,8 +1,10 @@
-import { Camera, PerspectiveCamera, Renderer, WebGLRenderer } from 'three';
+import { Camera, PerspectiveCamera, Renderer, Vector3, WebGLRenderer } from 'three';
 import { GameObject } from './core/GameObject';
 import { GameScene } from './core/GameScene';
 import { Input } from './core/Input';
 import { Time } from './core/Time';
+import { GameObjectConstructionParams } from './core/types/GameObjectConstructionParams';
+import { InstantiateOptions } from './core/types/InstantiateOptions';
 
 export class GameEngine {
   public developmentMode: boolean = true;
@@ -13,22 +15,30 @@ export class GameEngine {
   private fpsCap: number = 60;
   private currentScene: GameScene | null = null;
   private scenes: GameScene[] = [];
-  private gameObjects: GameObject[] = [];
   private currentSceneAssets = new Map<string, unknown>();
 
+  private readonly gameObjects: GameObject[] = [];
   private readonly mainCamera: Camera;
   private readonly renderer: Renderer;
-  private readonly time: Time;
-  private readonly input: Input;
+  private readonly timeObj: Time;
+  private readonly inputObj: Input;
 
   public constructor() {
     this.mainCamera = new PerspectiveCamera(10, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.renderer = new WebGLRenderer();
-    this.time = new Time();
+    this.timeObj = new Time();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
-    this.input = new Input(this.renderer.domElement);
+    this.inputObj = new Input(this.renderer.domElement);
     this.mainCamera.position.z = 50;
+  }
+
+  public get time(): Time {
+    return this.timeObj;
+  }
+
+  public get input(): Input {
+    return this.inputObj;
   }
 
   public get fpsLimit(): number {
@@ -38,6 +48,50 @@ export class GameEngine {
   public set fpsLimit(value: number) {
     this.fpsCap = value;
     this.fpsIntervalInMS = Math.floor(1000 / value);
+  }
+
+  public findGameObjectByName(name: string): GameObject | undefined {
+    return this.gameObjects.find(x => x.name === name);
+  }
+
+  public findGameObjectsByName(name: string): GameObject[] {
+    return this.gameObjects.filter(x => x.name === name);
+  }
+
+  public findGameObjectById(id: number): GameObject | undefined {
+    return this.gameObjects.find(x => x.id === id);
+  }
+
+  public findGameObjectWithTag(tag: string): GameObject | undefined {
+    return this.gameObjects.find(x => x.tags.includes(tag));
+  }
+
+  public findGameObjectsWithTag(tag: string): GameObject[] {
+    return this.gameObjects.filter(x => x.tags.includes(tag));
+  }
+
+  public instantiate<T extends GameObject>(
+    type: new (constructionParams: GameObjectConstructionParams) => T,
+    options?: InstantiateOptions
+  ): GameObject {
+    const { position, parent, rotation } = options ?? {};
+    const newGameObject = new type({ gameEngine: this });
+
+    if (position !== undefined) {
+      newGameObject.position.add(position);
+    }
+
+    // if (rotation !== undefined) {
+    //   newGameObject.transform.rotation = rotation;
+    // }
+
+    if (parent !== undefined) {
+      newGameObject.parent = parent;
+    }
+
+    this.registerGameObject(newGameObject);
+
+    return newGameObject;
   }
 
   public getAsset<T>(key: string, assertType?: new () => T): T {
@@ -69,11 +123,16 @@ export class GameEngine {
       this.currentScene = sceneOrIndex;
     }
 
+    this.gameObjects.clear();
+
     await this.currentScene.initializeAssets();
     this.currentSceneAssets = this.currentScene.assets;
 
     this.currentScene.initializeGameObjects(this);
-    this.gameObjects = this.currentScene.gameObjects;
+
+    for (const obj of this.currentScene.gameObjects) {
+      this.registerGameObject(obj);
+    }
 
     this.startGame();
   }
@@ -82,12 +141,24 @@ export class GameEngine {
     this.gameLoopId = requestAnimationFrame(timeStamp => this.gameLoop(timeStamp));
   }
 
+  private registerGameObject(newGameObject: GameObject): void {
+    this.gameObjects.push(newGameObject);
+
+    newGameObject.start();
+
+    for (const child of newGameObject.children) {
+      if (child instanceof GameObject) {
+        this.registerGameObject(child);
+      }
+    }
+  }
+
   private update(timeStamp: number): void {
     if (!this.currentScene) {
       throw new Error('No scene is loaded!');
     }
 
-    this.time.updateTime(timeStamp);
+    this.timeObj.updateTime(timeStamp);
 
     for (let i = 0; i < this.gameObjects.length; i++) {
       this.gameObjects[i].update();

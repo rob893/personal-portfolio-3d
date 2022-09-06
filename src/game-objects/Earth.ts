@@ -1,4 +1,4 @@
-import { BufferGeometry, Color, DoubleSide, Material, Mesh, MeshPhongMaterial, SphereGeometry, Texture } from 'three';
+import { Color, DoubleSide, Mesh, MeshPhongMaterial, Object3D, SphereGeometry, Texture } from 'three';
 import { Rotator } from '../components/Rotator';
 import { Component } from '../engine/core/components/Component';
 import { GameObject } from '../engine/core/GameObject';
@@ -21,7 +21,7 @@ export class Earth extends GameObject {
     return [new Rotator(this)];
   }
 
-  protected override getMesh(_config: GameObjectConstructionParams): Mesh | undefined {
+  protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
     const geometry = new SphereGeometry(1, 32, 32);
 
     const texture = this.getAsset('earthTexture', Texture);

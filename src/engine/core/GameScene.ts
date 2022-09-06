@@ -1,4 +1,4 @@
-import { Scene } from 'three';
+import { AmbientLight, Object3D, Scene } from 'three';
 import { GameEngine } from '../GameEngine';
 import { GameObject } from './GameObject';
 
@@ -55,11 +55,19 @@ export abstract class GameScene extends Scene {
       throw new Error("The scene's assets must be loaded before loading initializing the game objects.");
     }
 
+    const staticObjects = this.buildStaticObjects(gameEngine);
+
+    if (staticObjects.length > 0) {
+      super.add(...staticObjects);
+    }
+
     this.add(...this.buildInitialGameObjects(gameEngine));
     this.objectsInitialized = true;
   }
 
   protected abstract buildInitialGameObjects(gameEngine: GameEngine): GameObject[];
+
+  protected abstract buildStaticObjects(gameEngine: GameEngine): Object3D[];
 
   protected abstract loadAssets(): Promise<Map<string, unknown>>;
 }
