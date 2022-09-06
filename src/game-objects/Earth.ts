@@ -11,7 +11,7 @@ export class Earth extends GameObject {
       name: 'Earth',
       rotation: 5,
       tags: ['earth'],
-      x: 3,
+      x: -300,
       y: 0,
       z: 0
     };
@@ -22,7 +22,7 @@ export class Earth extends GameObject {
   }
 
   protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
-    const geometry = new SphereGeometry(1, 32, 32);
+    const geometry = new SphereGeometry(25, 32, 32);
 
     const texture = this.getAsset('earthTexture', Texture);
     const bump = this.getAsset('earthBump', Texture);

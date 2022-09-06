@@ -18,19 +18,19 @@ export class GameEngine {
   private currentSceneAssets = new Map<string, unknown>();
 
   private readonly gameObjects: GameObject[] = [];
-  private readonly mainCamera: Camera;
+  private readonly camera: Camera;
   private readonly renderer: Renderer;
   private readonly timeObj: Time;
   private readonly inputObj: Input;
 
   public constructor() {
-    this.mainCamera = new PerspectiveCamera(10, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1.0, 10000);
     this.renderer = new WebGLRenderer();
     this.timeObj = new Time();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
     this.inputObj = new Input(this.renderer.domElement);
-    this.mainCamera.position.z = 50;
+    this.camera.position.z = 50;
   }
 
   public get time(): Time {
@@ -39,6 +39,14 @@ export class GameEngine {
 
   public get input(): Input {
     return this.inputObj;
+  }
+
+  public get mainCamera(): Camera {
+    return this.camera;
+  }
+
+  public get domCanvasElement(): HTMLCanvasElement {
+    return this.renderer.domElement;
   }
 
   public get fpsLimit(): number {

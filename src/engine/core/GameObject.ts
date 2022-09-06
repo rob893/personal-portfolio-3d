@@ -1,4 +1,4 @@
-import { Event, Mesh, Object3D, Vector3 } from 'three';
+import { Camera, Event, Mesh, Object3D, Vector3 } from 'three';
 import { GameEngine } from '../GameEngine';
 import { Component } from './components/Component';
 import { Input } from './Input';
@@ -62,6 +62,14 @@ export abstract class GameObject<
 
   public get time(): Time {
     return this.gameEngine.time;
+  }
+
+  public get domCanvasElement(): HTMLCanvasElement {
+    return this.gameEngine.domCanvasElement;
+  }
+
+  public get mainCamera(): Camera {
+    return this.gameEngine.mainCamera;
   }
 
   public get enabled(): boolean {

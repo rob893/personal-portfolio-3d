@@ -97,10 +97,10 @@ async function main(): Promise<void> {
   const scene = new SceneOne();
   const gameEngine = new GameEngine();
 
-  const loader = new TextureLoader();
+  // const loader = new TextureLoader();
 
-  const backgroundTexture = await loader.loadAsync(backgroundImage);
-  scene.background = backgroundTexture;
+  // const backgroundTexture = await loader.loadAsync(backgroundImage);
+  // scene.background = backgroundTexture;
 
   // const earth = await getEarthMesh(loader);
   // const mars = await getMars(loader);

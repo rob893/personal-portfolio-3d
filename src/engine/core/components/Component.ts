@@ -1,3 +1,4 @@
+import { Camera } from 'three';
 import { GameObject } from '../GameObject';
 import { Input } from '../Input';
 import { Time } from '../Time';
@@ -20,6 +21,14 @@ export abstract class Component {
 
   public get time(): Time {
     return this.gameObject.time;
+  }
+
+  public get domCanvasElement(): HTMLCanvasElement {
+    return this.gameObject.domCanvasElement;
+  }
+
+  public get mainCamera(): Camera {
+    return this.gameObject.mainCamera;
   }
 
   public get enabled(): boolean {

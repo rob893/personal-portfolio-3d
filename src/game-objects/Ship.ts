@@ -1,7 +1,7 @@
 import { Object3D } from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Component } from '../engine/core/components/Component';
-import { ShipController } from '../engine/core/components/ShipController';
+import { ShipController } from '../components/ShipController';
 import { GameObject } from '../engine/core/GameObject';
 import { GameObjectConstructionParams } from '../engine/core/types/GameObjectConstructionParams';
 import { PrefabSettings } from '../engine/core/types/PrefabSettings';
@@ -12,8 +12,8 @@ export class Ship extends GameObject {
       name: 'Ship',
       rotation: 5,
       tags: ['ship'],
-      x: 3,
-      y: -4,
+      x: 300,
+      y: 0,
       z: 0
     };
   }
