@@ -1,36 +1,40 @@
-import { Color, DoubleSide, Mesh, MeshPhongMaterial, Object3D, SphereGeometry, Texture } from 'three';
+import {
+  Color,
+  DoubleSide,
+  Mesh,
+  MeshBasicMaterial,
+  MeshPhongMaterial,
+  Object3D,
+  SphereGeometry,
+  Texture
+} from 'three';
 import { Rotator } from '../components/Rotator';
 import { Component } from '../engine/core/components/Component';
 import { GameObject } from '../engine/core/GameObject';
 import { GameObjectConstructionParams } from '../engine/core/types/GameObjectConstructionParams';
 import { PrefabSettings } from '../engine/core/types/PrefabSettings';
 
-export class Earth extends GameObject {
+class EarthClouds extends GameObject {
   protected getPrefabSettings(): PrefabSettings {
     return {
-      name: 'Earth',
-      rotation: 5,
-      tags: ['earth'],
-      x: -300,
+      name: 'EarthClouds',
+      rotation: 0,
+      tags: ['EarthClouds'],
+      x: 0,
       y: 0,
       z: 0
     };
   }
 
   protected buildInitialComponents(_config: GameObjectConstructionParams): Component[] {
-    return [new Rotator(this)];
+    return [new Rotator(this, 1.15)];
   }
 
   protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
-    const geometry = new SphereGeometry(25, 32, 32);
+    const cloudTex = this.getAsset('cloudTexture', Texture);
 
-    const texture = this.getAsset('earthTexture', Texture);
-    const bump = this.getAsset('earthBump', Texture);
-    const specular = this.getAsset('earthSpecular', Texture);
-    const cloudTex = this.getAsset('ckoudTexture', Texture);
-
-    const cloudGeo = new SphereGeometry(1.005, 32, 32);
-    const cloudMat = new MeshPhongMaterial({
+    const cloudGeo = new SphereGeometry(101500, 64, 64);
+    const cloudMat = new MeshBasicMaterial({
       map: cloudTex,
       side: DoubleSide,
       opacity: 0.3,
@@ -38,6 +42,33 @@ export class Earth extends GameObject {
       depthWrite: false
     });
     const cloudMesh = new Mesh(cloudGeo, cloudMat);
+
+    return cloudMesh;
+  }
+}
+
+export class Earth extends GameObject {
+  protected getPrefabSettings(): PrefabSettings {
+    return {
+      name: 'Earth',
+      rotation: 0,
+      tags: ['earth'],
+      x: 30000000,
+      y: 0,
+      z: 0
+    };
+  }
+
+  protected buildInitialComponents(_config: GameObjectConstructionParams): Component[] {
+    return [new Rotator(this, 1)];
+  }
+
+  protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
+    const geometry = new SphereGeometry(100000, 64, 64);
+
+    const texture = this.getAsset('earthTexture', Texture);
+    const bump = this.getAsset('earthBump', Texture);
+    const specular = this.getAsset('earthSpecular', Texture);
 
     const earthMesh = new MeshPhongMaterial({
       map: texture,
@@ -48,8 +79,13 @@ export class Earth extends GameObject {
     });
 
     const earth = new Mesh(geometry, earthMesh);
-    earth.add(cloudMesh);
 
     return earth;
+  }
+
+  protected override buildAndReturnChildGameObjects(
+    config: GameObjectConstructionParams
+  ): GameObject<GameObjectConstructionParams>[] {
+    return [new EarthClouds(config)];
   }
 }

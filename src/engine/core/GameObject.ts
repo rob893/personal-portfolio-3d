@@ -146,12 +146,12 @@ export abstract class GameObject<
   }
 
   public addComponent<T extends Component>(newComponent: Component): T {
-    const currentComponents = this.componentMap.get(newComponent.constructor as new () => T);
+    const currentComponents = this.componentMap.get(newComponent.constructor as new (...params: any[]) => T);
 
     if (currentComponents !== undefined) {
       currentComponents.push(newComponent);
     } else {
-      this.componentMap.set(newComponent.constructor as new () => T, [newComponent]);
+      this.componentMap.set(newComponent.constructor as new (...params: any[]) => T, [newComponent]);
     }
 
     newComponent.enabled = true;
@@ -161,20 +161,20 @@ export abstract class GameObject<
   }
 
   public removeComponent(component: Component): void {
-    if (!this.componentMap.has(component.constructor as new () => Component)) {
+    if (!this.componentMap.has(component.constructor as new (...params: any[]) => Component)) {
       throw new Error(`This object does not have a ${component.constructor.name} component!`);
     }
 
     this.updatableComponents.remove(component);
-    this.componentMap.delete(component.constructor as new () => Component);
+    this.componentMap.delete(component.constructor as new (...params: any[]) => Component);
     component.onDestroy();
   }
 
-  public hasComponent<T extends Component>(component: new () => T): boolean {
+  public hasComponent<T extends Component>(component: new (...params: any[]) => T): boolean {
     return this.componentMap.has(component);
   }
 
-  public getComponent<T extends Component>(component: new () => T): T | undefined {
+  public getComponent<T extends Component>(component: new (...params: any[]) => T): T | undefined {
     const components = this.componentMap.get(component);
 
     if (!components || components.length === 0) {
@@ -184,7 +184,7 @@ export abstract class GameObject<
     return components[0] as T;
   }
 
-  public getComponents<T extends Component>(component: new () => T): T[] {
+  public getComponents<T extends Component>(component: new (...params: any[]) => T): T[] {
     const components = this.componentMap.get(component);
 
     if (!components || components.length === 0) {
@@ -194,7 +194,7 @@ export abstract class GameObject<
     return [...components] as T[];
   }
 
-  public getComponentInParent<T extends Component>(component: new () => T): T | undefined {
+  public getComponentInParent<T extends Component>(component: new (...params: any[]) => T): T | undefined {
     let parent = this.parent;
 
     while (parent) {
@@ -208,7 +208,7 @@ export abstract class GameObject<
     return undefined;
   }
 
-  public getComponentsInParent<T extends Component>(component: new () => T): T[] {
+  public getComponentsInParent<T extends Component>(component: new (...params: any[]) => T): T[] {
     let parent = this.parent;
     const components: T[] = [];
 
@@ -223,7 +223,7 @@ export abstract class GameObject<
     return components;
   }
 
-  public getComponentInChildren<T extends Component>(component: new () => T): T | undefined {
+  public getComponentInChildren<T extends Component>(component: new (...params: any[]) => T): T | undefined {
     const children = this.children;
 
     while (children.length > 0) {
@@ -243,7 +243,7 @@ export abstract class GameObject<
     return undefined;
   }
 
-  public getComponentsInChildren<T extends Component>(component: new () => T): T[] {
+  public getComponentsInChildren<T extends Component>(component: new (...params: any[]) => T): T[] {
     const children = this.children;
     const components: T[] = [];
 
@@ -264,7 +264,7 @@ export abstract class GameObject<
     return components;
   }
 
-  public getAsset<T>(key: string, assertType?: new () => T): T {
+  public getAsset<T>(key: string, assertType?: new (...params: any[]) => T): T {
     return this.gameEngine.getAsset(key, assertType);
   }
 
@@ -294,12 +294,12 @@ export abstract class GameObject<
   private setComponents(components: Component[]): void {
     for (const component of components) {
       this.updatableComponents.push(component);
-      const currentComponents = this.componentMap.get(component.constructor as new () => Component);
+      const currentComponents = this.componentMap.get(component.constructor as new (...params: any[]) => Component);
 
       if (currentComponents !== undefined) {
         currentComponents.push(component);
       } else {
-        this.componentMap.set(component.constructor as new () => Component, [component]);
+        this.componentMap.set(component.constructor as new (...params: any[]) => Component, [component]);
       }
     }
   }

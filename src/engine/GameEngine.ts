@@ -1,4 +1,5 @@
 import { Camera, PerspectiveCamera, Renderer, Vector3, WebGLRenderer } from 'three';
+import Stats from 'stats.js';
 import { GameObject } from './core/GameObject';
 import { GameScene } from './core/GameScene';
 import { Input } from './core/Input';
@@ -22,15 +23,24 @@ export class GameEngine {
   private readonly renderer: Renderer;
   private readonly timeObj: Time;
   private readonly inputObj: Input;
+  private readonly stats: Stats;
 
   public constructor() {
-    this.camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1.0, 10000);
+    //this.camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1.0, 300000);
+    this.camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 10, Number.MAX_SAFE_INTEGER); //0.0001, 300000); // Number.MAX_SAFE_INTEGER);
     this.renderer = new WebGLRenderer();
     this.timeObj = new Time();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
     this.inputObj = new Input(this.renderer.domElement);
     this.camera.position.z = 50;
+    this.stats = new Stats();
+    this.stats.showPanel(0);
+    this.fpsLimit = 1500;
+    document.body.appendChild(this.stats.dom);
+
+    window.addEventListener('resize', () => this.resize(), false);
+
+    this.resize();
   }
 
   public get time(): Time {
@@ -55,7 +65,7 @@ export class GameEngine {
 
   public set fpsLimit(value: number) {
     this.fpsCap = value;
-    this.fpsIntervalInMS = Math.floor(1000 / value);
+    this.fpsIntervalInMS = 1000 / value;
   }
 
   public findGameObjectByName(name: string): GameObject | undefined {
@@ -149,6 +159,15 @@ export class GameEngine {
     this.gameLoopId = requestAnimationFrame(timeStamp => this.gameLoop(timeStamp));
   }
 
+  private resize(): void {
+    if (this.camera instanceof PerspectiveCamera) {
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
+    }
+
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
   private registerGameObject(newGameObject: GameObject): void {
     this.gameObjects.push(newGameObject);
 
@@ -179,9 +198,11 @@ export class GameEngine {
     const now = performance.now();
     const diff = now - this.prevFrameTime;
 
-    if (diff >= this.fpsIntervalInMS) {
-      this.prevFrameTime = now;
+    if (diff > this.fpsIntervalInMS) {
+      this.stats.begin();
+      this.prevFrameTime = now - (diff % this.fpsIntervalInMS);
       this.update(timeStamp);
+      this.stats.end();
     }
 
     this.gameLoopId = requestAnimationFrame(newTimeStamp => this.gameLoop(newTimeStamp));
