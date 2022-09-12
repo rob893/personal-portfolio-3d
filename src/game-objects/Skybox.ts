@@ -3,7 +3,8 @@ import { Component } from '../engine/core/components/Component';
 import { GameObject } from '../engine/core/GameObject';
 import { GameObjectConstructionParams } from '../engine/core/types/GameObjectConstructionParams';
 import { PrefabSettings } from '../engine/core/types/PrefabSettings';
-import { skyFragmentShader, skyVertexShader } from '../shaders/skyboxShaders';
+import skyFragmentShader from '../shaders/skybox-fragment.glsl';
+import skyVertexShader from '../shaders/skybox-vertex.glsl';
 
 export class Skybox extends GameObject {
   protected getPrefabSettings(): PrefabSettings {
@@ -25,7 +26,7 @@ export class Skybox extends GameObject {
     const uniforms = {
       background: { value: skyboxTexture }
     };
-    const skyGeo = new SphereGeometry(1500000000, 32, 32);
+    const skyGeo = new SphereGeometry(15000000000, 32, 32);
     const skyMat = new ShaderMaterial({
       uniforms,
       vertexShader: skyVertexShader,

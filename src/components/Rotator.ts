@@ -3,22 +3,26 @@ import { GameObject } from '../engine/core/GameObject';
 
 export class Rotator extends Component {
   public speed: number;
+
+  private readonly startingRotation;
   // counter = 0;
   // prev = 0;
   // startTime = 0;
 
-  public constructor(gameObject: GameObject, speed: number = 1) {
+  public constructor(gameObject: GameObject, speed: number = 1, startingRotation: number = 0) {
     super(gameObject);
     this.speed = speed;
+    this.startingRotation = startingRotation;
   }
 
-  // public override start(): void {
-  //   this.prev = this.gameObject.parent?.rotation.y ?? 0;
-  //   this.startTime = Date.now();
-  // }
+  public override start(): void {
+    //this.prev = this.gameObject.parent?.rotation.y ?? 0;
+    //this.startTime = Date.now();
+    this.gameObject.rotation.y = this.startingRotation;
+  }
 
   public override update(): void {
-    this.gameObject.rotation.y += this.speed * 0.25 * this.time.deltaTime;
+    this.gameObject.rotation.y += this.speed * 0.025 * this.time.deltaTime;
 
     // if (this.gameObject.name !== 'Orbiter' && this.gameObject.parent && this.gameObject.parent.name) {
     //   const deg = this.gameObject.parent.rotation.y % 6.28;

@@ -12,9 +12,9 @@ export class Ship extends GameObject {
       name: 'player',
       rotation: 0,
       tags: ['ship', 'player'],
-      x: 29000000,
-      y: 1000000,
-      z: -500000
+      x: 30000000,
+      y: 0,
+      z: 150000
     };
   }
 

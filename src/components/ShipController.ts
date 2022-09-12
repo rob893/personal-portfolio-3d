@@ -1,32 +1,55 @@
 import { Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
 import { GameObject } from '../engine/core/GameObject';
 import { Component } from '../engine/core/components/Component';
 import { Key } from '../engine/core/enums/Key';
 
 export class ShipController extends Component {
+  public _speed = 1000000;
   //private readonly orbitControls: OrbitControls;
-  public speed = 1000000;
+  private readonly flyControls: FlyControls;
 
   public constructor(gameObject: GameObject) {
     super(gameObject);
     // this.orbitControls = new OrbitControls(this.mainCamera, this.domCanvasElement);
     //athis.mainCamera.parent = this.gameObject;
     // this.orbitControls.target = this.gameObject.position;
+    this.flyControls = new FlyControls(this.mainCamera, this.domCanvasElement);
+
+    this.flyControls.object.position.copy(this.gameObject.position);
+    this.flyControls.movementSpeed = this.speed;
+    this.flyControls.rollSpeed = 0.5;
+    //this.flyControls.
+    //this.flyControls.object.parent = gameObject;
   }
 
+  public get speed(): number {
+    return this._speed;
+  }
+
+  public set speed(value: number) {
+    this.flyControls.movementSpeed = value;
+    this._speed = value;
+  }
+
+  // public override start(): void {
+  //     const player = this.ge
+  // }
+
   public override update(): void {
-    if (this.input.getKey('w')) {
-      this.gameObject.position.addScaledVector(
-        this.gameObject.getWorldDirection(new Vector3()),
-        this.speed * this.time.deltaTime
-      );
-    } else if (this.input.getKey('s')) {
-      this.gameObject.position.addScaledVector(
-        this.gameObject.getWorldDirection(new Vector3()),
-        -(this.speed * 0.25 * this.time.deltaTime)
-      );
-    }
+    this.flyControls.update(this.time.deltaTime);
+    // if (this.input.getKey('w')) {
+    //   this.gameObject.position.addScaledVector(
+    //     this.gameObject.getWorldDirection(new Vector3()),
+    //     this.speed * this.time.deltaTime
+    //   );
+    // } else if (this.input.getKey('s')) {
+    //   this.gameObject.position.addScaledVector(
+    //     this.gameObject.getWorldDirection(new Vector3()),
+    //     -(this.speed * 0.25 * this.time.deltaTime)
+    //   );
+    // }
 
     if (this.input.getKey('q')) {
       // this.gameObject.position.addScaledVector(this.gameObject.getWorldDirection(new Vector3()), 1);
@@ -39,17 +62,17 @@ export class ShipController extends Component {
       // this.gameObject.position.addScaledVector(right, 1);
     }
 
-    if (this.input.getKey(Key.Space)) {
-      this.gameObject.position.addScaledVector(new Vector3(0, 1, 0), this.speed * 0.25 * this.time.deltaTime);
-    } else if (this.input.getKey('c')) {
-      this.gameObject.position.addScaledVector(new Vector3(0, -1, 0), this.speed * 0.25 * this.time.deltaTime);
-    }
+    // if (this.input.getKey(Key.Space)) {
+    //   this.gameObject.position.addScaledVector(new Vector3(0, 1, 0), this.speed * 0.25 * this.time.deltaTime);
+    // } else if (this.input.getKey('c')) {
+    //   this.gameObject.position.addScaledVector(new Vector3(0, -1, 0), this.speed * 0.25 * this.time.deltaTime);
+    // }
 
-    if (this.input.getKey('d')) {
-      this.gameObject.rotateY(-this.time.deltaTime * 5);
-    } else if (this.input.getKey('a')) {
-      this.gameObject.rotateY(5 * this.time.deltaTime);
-    }
+    // if (this.input.getKey('d')) {
+    //   this.gameObject.rotateY(-this.time.deltaTime * 5);
+    // } else if (this.input.getKey('a')) {
+    //   this.gameObject.rotateY(5 * this.time.deltaTime);
+    // }
 
     if (this.input.getKey('1')) {
       this.speed = 250000;
@@ -119,7 +142,8 @@ export class ShipController extends Component {
     if (this.input.getKey('t') && this.input.getKey('8')) {
       const obj = this.findGameObjectByName('Neptune');
       if (obj) {
-        this.gameObject.position.set(obj.position.x + 1200000, obj.position.y, obj.position.z);
+        const pos = obj.getWorldPosition(new Vector3());
+        this.gameObject.position.set(pos.x + 1200000, pos.y, pos.z);
       }
     }
 

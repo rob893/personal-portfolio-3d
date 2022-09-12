@@ -68,6 +68,10 @@ export abstract class GameObject<
     return this.gameEngine.domCanvasElement;
   }
 
+  public get engine(): GameEngine {
+    return this.gameEngine;
+  }
+
   public get mainCamera(): Camera {
     return this.gameEngine.mainCamera;
   }

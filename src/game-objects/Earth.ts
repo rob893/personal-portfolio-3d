@@ -49,6 +49,7 @@ class EarthClouds extends GameObject {
 
 export class Earth extends GameObject {
   protected getPrefabSettings(): PrefabSettings {
+    // 2325000000 x if distance full scaled
     return {
       name: 'Earth',
       rotation: 0,

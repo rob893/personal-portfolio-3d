@@ -97,19 +97,20 @@ export class SceneOne extends GameScene {
   }
 
   protected buildInitialGameObjects(gameEngine: GameEngine): GameObject[] {
+    const getRand = (min: number, max: number): number => Math.random() * (max - min + 1) + min;
     return [
       new Skybox({ gameEngine }),
       new Ship({ gameEngine }),
       new PlayerCameraRig({ gameEngine }),
       new Sun({ gameEngine }),
-      new Orbiter({ gameEngine, orbiteeCtor: Mercury, orbitSpeed: 4.15 }),
-      new Orbiter({ gameEngine, orbiteeCtor: Venus, orbitSpeed: 1.62 }),
-      new Orbiter({ gameEngine, orbiteeCtor: Earth, orbitSpeed: 1 }),
-      new Orbiter({ gameEngine, orbiteeCtor: Mars, orbitSpeed: 0.53 }),
-      new Orbiter({ gameEngine, orbiteeCtor: Jupiter, orbitSpeed: 0.084 }),
-      new Orbiter({ gameEngine, orbiteeCtor: Saturn, orbitSpeed: 0.0339 }),
-      new Orbiter({ gameEngine, orbiteeCtor: Uranus, orbitSpeed: 0.0119 }),
-      new Orbiter({ gameEngine, orbiteeCtor: Neptune, orbitSpeed: 0.006068 })
+      new Orbiter({ gameEngine, orbiteeCtor: Mercury, orbitSpeed: 4.15, startingRotation: getRand(0, 7) }),
+      new Orbiter({ gameEngine, orbiteeCtor: Venus, orbitSpeed: 1.62, startingRotation: getRand(0, 7) }),
+      new Orbiter({ gameEngine, orbiteeCtor: Earth, orbitSpeed: 1, startingRotation: 0 }),
+      new Orbiter({ gameEngine, orbiteeCtor: Mars, orbitSpeed: 0.53, startingRotation: getRand(0, 7) }),
+      new Orbiter({ gameEngine, orbiteeCtor: Jupiter, orbitSpeed: 0.084, startingRotation: getRand(0, 7) }),
+      new Orbiter({ gameEngine, orbiteeCtor: Saturn, orbitSpeed: 0.0339, startingRotation: getRand(0, 7) }),
+      new Orbiter({ gameEngine, orbiteeCtor: Uranus, orbitSpeed: 0.0119, startingRotation: getRand(0, 7) }),
+      new Orbiter({ gameEngine, orbiteeCtor: Neptune, orbitSpeed: 0.006068, startingRotation: getRand(0, 7) })
     ];
   }
 

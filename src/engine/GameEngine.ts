@@ -1,4 +1,4 @@
-import { Camera, PerspectiveCamera, Renderer, Vector3, WebGLRenderer } from 'three';
+import { Camera, PerspectiveCamera, Renderer, Scene, Vector3, WebGLRenderer } from 'three';
 import Stats from 'stats.js';
 import { GameObject } from './core/GameObject';
 import { GameScene } from './core/GameScene';
@@ -9,6 +9,7 @@ import { InstantiateOptions } from './core/types/InstantiateOptions';
 
 export class GameEngine {
   public developmentMode: boolean = true;
+  public readonly renderer: Renderer;
 
   private gameLoopId: number | null = null;
   private prevFrameTime: number = 0;
@@ -20,15 +21,16 @@ export class GameEngine {
 
   private readonly gameObjects: GameObject[] = [];
   private readonly camera: Camera;
-  private readonly renderer: Renderer;
   private readonly timeObj: Time;
   private readonly inputObj: Input;
   private readonly stats: Stats;
 
   public constructor() {
     //this.camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1.0, 300000);
-    this.camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 10, Number.MAX_SAFE_INTEGER); //0.0001, 300000); // Number.MAX_SAFE_INTEGER);
-    this.renderer = new WebGLRenderer();
+    this.camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 100, Number.MAX_SAFE_INTEGER); //0.0001, 300000); // Number.MAX_SAFE_INTEGER);
+    this.renderer = new WebGLRenderer({
+      logarithmicDepthBuffer: false
+    });
     this.timeObj = new Time();
     document.body.appendChild(this.renderer.domElement);
     this.inputObj = new Input(this.renderer.domElement);
@@ -57,6 +59,14 @@ export class GameEngine {
 
   public get domCanvasElement(): HTMLCanvasElement {
     return this.renderer.domElement;
+  }
+
+  public get loadedScene(): Scene {
+    if (!this.currentScene) {
+      throw new Error('No scene is loaded!');
+    }
+
+    return this.currentScene;
   }
 
   public get fpsLimit(): number {
@@ -141,6 +151,26 @@ export class GameEngine {
       this.currentScene = sceneOrIndex;
     }
 
+    const loadingElement = document.createElement('div');
+    loadingElement.className = 'loader-wrapper';
+
+    const loadingTexEle = document.createElement('div');
+    loadingTexEle.style.padding = '12px';
+    loadingTexEle.style.fontSize = 'large';
+    loadingTexEle.style.fontFamily = 'cursive';
+    loadingTexEle.innerHTML = 'Loading';
+
+    const loaderSpan = document.createElement('span');
+    loaderSpan.className = 'loader';
+
+    const innerLoaderSpan = document.createElement('span');
+    innerLoaderSpan.className = 'loader-inner';
+
+    loaderSpan.appendChild(innerLoaderSpan);
+    loadingElement.appendChild(loadingTexEle);
+    loadingElement.appendChild(loaderSpan);
+    document.body.appendChild(loadingElement);
+
     this.gameObjects.clear();
 
     await this.currentScene.initializeAssets();
@@ -151,6 +181,8 @@ export class GameEngine {
     for (const obj of this.currentScene.gameObjects) {
       this.registerGameObject(obj);
     }
+
+    document.body.removeChild(loadingElement);
 
     this.startGame();
   }
@@ -169,6 +201,10 @@ export class GameEngine {
   }
 
   private registerGameObject(newGameObject: GameObject): void {
+    if (!(newGameObject instanceof GameObject)) {
+      return;
+    }
+
     this.gameObjects.push(newGameObject);
 
     newGameObject.start();

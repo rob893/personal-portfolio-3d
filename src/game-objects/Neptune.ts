@@ -7,6 +7,7 @@ import { PrefabSettings } from '../engine/core/types/PrefabSettings';
 
 export class Neptune extends GameObject {
   protected getPrefabSettings(): PrefabSettings {
+    // 27495750000 x if distance full scaled
     return {
       name: 'Neptune',
       rotation: 0,

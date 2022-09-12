@@ -18,20 +18,21 @@ export class ThirdPersonCameraController extends Component {
   }
 
   public override update(): void {
-    if (!this.target) {
-      return;
-    }
+    return;
+    // if (!this.target) {
+    //   return;
+    // }
 
-    const detlaTime = this.time.deltaTime;
+    // const detlaTime = this.time.deltaTime;
 
-    const idealOffset = this.calculateIdealOffset();
+    // const idealOffset = this.calculateIdealOffset();
 
-    const t1 = 1.0 - (0.05 * this.scale) ** detlaTime;
+    // const t1 = 1.0 - (0.05 * this.scale) ** detlaTime;
 
-    this.gameObject.position.lerp(idealOffset, t1);
+    // this.gameObject.position.lerp(idealOffset, t1);
 
-    this.mainCamera.position.copy(this.gameObject.position);
-    this.mainCamera.lookAt(this.target.position);
+    // this.mainCamera.position.copy(this.gameObject.position);
+    // this.mainCamera.lookAt(this.target.position);
   }
 
   private calculateIdealOffset(): Vector3 {

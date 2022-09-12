@@ -7,6 +7,7 @@ import { PrefabSettings } from '../engine/core/types/PrefabSettings';
 export interface OrbiterConfig extends GameObjectConstructionParams {
   orbiteeCtor: new (config: GameObjectConstructionParams) => GameObject;
   orbitSpeed: number;
+  startingRotation: number;
 }
 
 export class Orbiter extends GameObject<OrbiterConfig> {
@@ -21,8 +22,8 @@ export class Orbiter extends GameObject<OrbiterConfig> {
     };
   }
 
-  protected buildInitialComponents({ orbitSpeed }: OrbiterConfig): Component[] {
-    return [new Rotator(this, orbitSpeed * 0.1)];
+  protected buildInitialComponents({ orbitSpeed, startingRotation }: OrbiterConfig): Component[] {
+    return [new Rotator(this, orbitSpeed * 0.001, startingRotation)];
   }
 
   protected override buildAndReturnChildGameObjects(config: OrbiterConfig): GameObject<GameObjectConstructionParams>[] {

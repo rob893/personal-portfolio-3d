@@ -13,6 +13,10 @@ const commonConfig: Configuration = {
         exclude: /node_modules/
       },
       {
+        test: /\.glsl$/,
+        loader: 'webpack-glsl-loader'
+      },
+      {
         test: /\.(glb|gltf)$/,
         use: [
           {
