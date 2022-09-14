@@ -11,7 +11,7 @@ export class Mercury extends GameObject {
       name: 'Mercury',
       rotation: 0,
       tags: ['Mercury'],
-      x: 11700000,
+      x: 5790000000,
       y: 0,
       z: 0
     };
@@ -22,7 +22,7 @@ export class Mercury extends GameObject {
   }
 
   protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
-    const geometry = new SphereGeometry(30000, 64, 64);
+    const geometry = new SphereGeometry(2439000, 64, 64);
 
     const texture = this.getAsset('mercTex', Texture);
 

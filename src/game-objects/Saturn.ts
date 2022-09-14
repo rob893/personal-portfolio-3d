@@ -20,7 +20,7 @@ export class Saturn extends GameObject {
       name: 'Saturn',
       rotation: 0,
       tags: ['Saturn'],
-      x: 287400000,
+      x: 147200000000,
       y: 0,
       z: 0
     };
@@ -31,8 +31,8 @@ export class Saturn extends GameObject {
   }
 
   protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
-    const geometry = new SphereGeometry(900000, 64, 64);
-    const ringGeo = new RingGeometry(1000000, 2000000, 64);
+    const geometry = new SphereGeometry(58232000, 64, 64);
+    const ringGeo = new RingGeometry(70000000, 136775000, 64);
 
     const texture = this.getAsset('satTex', Texture);
     const ringTex = this.getAsset('satRingTex', Texture);

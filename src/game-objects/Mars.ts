@@ -11,7 +11,7 @@ export class Mars extends GameObject {
       name: 'Mars',
       rotation: 0,
       tags: ['Mars'],
-      x: 45600000,
+      x: 22790000000,
       y: 0,
       z: 0
     };
@@ -22,7 +22,7 @@ export class Mars extends GameObject {
   }
 
   protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
-    const geometry = new SphereGeometry(50000, 64, 64);
+    const geometry = new SphereGeometry(3389000, 64, 64);
 
     const texture = this.getAsset('marsTex', Texture);
 

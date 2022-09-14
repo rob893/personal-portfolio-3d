@@ -26,7 +26,7 @@ export class Skybox extends GameObject {
     const uniforms = {
       background: { value: skyboxTexture }
     };
-    const skyGeo = new SphereGeometry(15000000000, 32, 32);
+    const skyGeo = new SphereGeometry(3749575000000, 32, 32); //15000000000, 32, 32);
     const skyMat = new ShaderMaterial({
       uniforms,
       vertexShader: skyVertexShader,

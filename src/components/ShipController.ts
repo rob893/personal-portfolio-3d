@@ -8,18 +8,18 @@ import { Key } from '../engine/core/enums/Key';
 export class ShipController extends Component {
   public _speed = 1000000;
   //private readonly orbitControls: OrbitControls;
-  private readonly flyControls: FlyControls;
+  private flyControls: FlyControls | undefined;
 
   public constructor(gameObject: GameObject) {
     super(gameObject);
     // this.orbitControls = new OrbitControls(this.mainCamera, this.domCanvasElement);
     //athis.mainCamera.parent = this.gameObject;
     // this.orbitControls.target = this.gameObject.position;
-    this.flyControls = new FlyControls(this.mainCamera, this.domCanvasElement);
+    // this.flyControls = new FlyControls(this.mainCamera, this.domCanvasElement);
 
-    this.flyControls.object.position.copy(this.gameObject.position);
-    this.flyControls.movementSpeed = this.speed;
-    this.flyControls.rollSpeed = 0.5;
+    // this.flyControls.object.position.copy(this.gameObject.position);
+    // this.flyControls.movementSpeed = this.speed;
+    // this.flyControls.rollSpeed = 0.5;
     //this.flyControls.
     //this.flyControls.object.parent = gameObject;
   }
@@ -29,16 +29,33 @@ export class ShipController extends Component {
   }
 
   public set speed(value: number) {
+    if (!this.flyControls) {
+      throw new Error('Flight controls not initialized.');
+    }
+    console.log(
+      `Speed set to ${value.toLocaleString('en-US', { maximumSignificantDigits: 2 })} meters per second. ${Math.floor(
+        value / 1609.34
+      ).toLocaleString('en-US', { maximumSignificantDigits: 2 })} miles per second. ${(
+        (value / 299792458) *
+        100
+      ).toLocaleString('en-US', { maximumSignificantDigits: 2 })}% light speed.`
+    );
     this.flyControls.movementSpeed = value;
     this._speed = value;
   }
 
-  // public override start(): void {
-  //     const player = this.ge
-  // }
+  public override start(): void {
+    this.flyControls = new FlyControls(this.mainCamera, this.domCanvasElement);
+
+    this.flyControls.object.position.copy(this.gameObject.position);
+    this.flyControls.movementSpeed = this.speed;
+    this.flyControls.rollSpeed = 0.5;
+
+    this.teleToPlanet('Earth');
+  }
 
   public override update(): void {
-    this.flyControls.update(this.time.deltaTime);
+    this.flyControls?.update(this.time.deltaTime);
     // if (this.input.getKey('w')) {
     //   this.gameObject.position.addScaledVector(
     //     this.gameObject.getWorldDirection(new Vector3()),
@@ -74,79 +91,100 @@ export class ShipController extends Component {
     //   this.gameObject.rotateY(5 * this.time.deltaTime);
     // }
 
-    if (this.input.getKey('1')) {
-      this.speed = 250000;
-    }
-
-    if (this.input.getKey('2')) {
-      this.speed = 1000000;
-    }
-
-    if (this.input.getKey('3')) {
-      this.speed = 10000000;
-    }
-
-    if (this.input.getKey('4')) {
-      this.speed = 20000000;
-    }
-
     if (this.input.getKey('t') && this.input.getKey('1')) {
-      const obj = this.findGameObjectByName('Mercury');
-      if (obj) {
-        this.gameObject.position.set(obj.position.x + 1200000, obj.position.y, obj.position.z);
-      }
+      this.teleToPlanet('Mercury');
+      return;
     }
 
     if (this.input.getKey('t') && this.input.getKey('2')) {
-      const obj = this.findGameObjectByName('Venus');
-      if (obj) {
-        this.gameObject.position.set(obj.position.x + 1200000, obj.position.y, obj.position.z);
-      }
+      this.teleToPlanet('Venus');
+      return;
     }
 
     if (this.input.getKey('t') && this.input.getKey('3')) {
-      const obj = this.findGameObjectByName('Earth');
-      if (obj) {
-        this.gameObject.position.set(obj.position.x + 1200000, obj.position.y, obj.position.z);
-      }
+      this.teleToPlanet('Earth');
+      return;
     }
 
     if (this.input.getKey('t') && this.input.getKey('4')) {
-      const obj = this.findGameObjectByName('Mars');
-      if (obj) {
-        this.gameObject.position.set(obj.position.x + 1200000, obj.position.y, obj.position.z);
-      }
+      this.teleToPlanet('Mars');
+      return;
     }
 
     if (this.input.getKey('t') && this.input.getKey('5')) {
-      const obj = this.findGameObjectByName('Jupiter');
-      if (obj) {
-        this.gameObject.position.set(obj.position.x + 1200000, obj.position.y, obj.position.z);
-      }
+      this.teleToPlanet('Jupiter');
+      return;
     }
 
     if (this.input.getKey('t') && this.input.getKey('6')) {
-      const obj = this.findGameObjectByName('Saturn');
-      if (obj) {
-        this.gameObject.position.set(obj.position.x + 1200000, obj.position.y, obj.position.z);
-      }
+      this.teleToPlanet('Saturn');
+      return;
     }
 
     if (this.input.getKey('t') && this.input.getKey('7')) {
-      const obj = this.findGameObjectByName('Uranus');
-      if (obj) {
-        this.gameObject.position.set(obj.position.x + 1200000, obj.position.y, obj.position.z);
-      }
+      this.teleToPlanet('Uranus');
+      return;
     }
 
     if (this.input.getKey('t') && this.input.getKey('8')) {
-      const obj = this.findGameObjectByName('Neptune');
-      if (obj) {
-        const pos = obj.getWorldPosition(new Vector3());
-        this.gameObject.position.set(pos.x + 1200000, pos.y, pos.z);
-      }
+      this.teleToPlanet('Neptune');
+      return;
+    }
+
+    if (this.input.getKey('1')) {
+      this.speed = 10000;
+      return;
+    }
+
+    if (this.input.getKey('2')) {
+      this.speed = 100000;
+      return;
+    }
+
+    if (this.input.getKey('3')) {
+      this.speed = 299792458 / 100;
+      return;
+    }
+
+    if (this.input.getKey('4')) {
+      this.speed = 299792458 / 10;
+      return;
+    }
+
+    if (this.input.getKey('5')) {
+      this.speed = 299792458 / 2;
+      return;
+    }
+
+    if (this.input.getKey('6')) {
+      this.speed = 299792458;
+      return;
+    }
+
+    if (this.input.getKey('7')) {
+      this.speed = 299792458 * 2;
+      return;
+    }
+
+    if (this.input.getKey('8')) {
+      this.speed = 2997924580;
+      return;
+    }
+
+    if (this.input.getKey('9')) {
+      this.speed = 29979245800;
+      return;
     }
 
     //this.orbitControls.update();
+  }
+
+  private teleToPlanet(name: string): void {
+    const obj = this.findGameObjectByName(name);
+    if (obj) {
+      const pos = obj.getWorldPosition(new Vector3());
+      this.flyControls?.object.position.set(pos.x + 120000000, pos.y + 10000000, pos.z);
+      this.mainCamera.lookAt(pos);
+    }
   }
 }

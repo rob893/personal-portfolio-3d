@@ -12,7 +12,7 @@ export class Neptune extends GameObject {
       name: 'Neptune',
       rotation: 0,
       tags: ['Neptune'],
-      x: 901500000,
+      x: 449710000000,
       y: 0,
       z: 0
     };
@@ -23,7 +23,7 @@ export class Neptune extends GameObject {
   }
 
   protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
-    const geometry = new SphereGeometry(380000, 64, 64);
+    const geometry = new SphereGeometry(24622000, 64, 64);
 
     const texture = this.getAsset('nepTex', Texture);
 

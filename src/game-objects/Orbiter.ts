@@ -23,7 +23,7 @@ export class Orbiter extends GameObject<OrbiterConfig> {
   }
 
   protected buildInitialComponents({ orbitSpeed, startingRotation }: OrbiterConfig): Component[] {
-    return [new Rotator(this, orbitSpeed * 0.001, startingRotation)];
+    return [new Rotator(this, orbitSpeed * 0.00025, startingRotation)];
   }
 
   protected override buildAndReturnChildGameObjects(config: OrbiterConfig): GameObject<GameObjectConstructionParams>[] {

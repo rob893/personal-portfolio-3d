@@ -8,9 +8,9 @@
     "noImplicitOverride": true,
     "forceConsistentCasingInFileNames": true,
     "preserveConstEnums": true,
-    "sourceMap": false,
-    "declaration": false,
-    "declarationMap": false,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
     "pretty": true,
     "outDir": "./dist",
     "rootDir": "./src"

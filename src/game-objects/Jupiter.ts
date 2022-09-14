@@ -11,7 +11,7 @@ export class Jupiter extends GameObject {
       name: 'Jupiter',
       rotation: 0,
       tags: ['Jupiter'],
-      x: 156000000,
+      x: 77830000000,
       y: 0,
       z: 0
     };
@@ -22,7 +22,7 @@ export class Jupiter extends GameObject {
   }
 
   protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
-    const geometry = new SphereGeometry(1100000, 64, 64);
+    const geometry = new SphereGeometry(69911000, 64, 64);
 
     const texture = this.getAsset('jupTex', Texture);
 

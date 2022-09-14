@@ -11,7 +11,7 @@ export class Venus extends GameObject {
       name: 'Venus',
       rotation: 0,
       tags: ['Venus'],
-      x: 21600000,
+      x: 10820000000,
       y: 0,
       z: 0
     };
@@ -22,7 +22,7 @@ export class Venus extends GameObject {
   }
 
   protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
-    const geometry = new SphereGeometry(90000, 64, 64);
+    const geometry = new SphereGeometry(6052000, 64, 64);
 
     const texture = this.getAsset('venusTex', Texture);
 

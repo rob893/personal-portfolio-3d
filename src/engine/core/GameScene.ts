@@ -1,9 +1,8 @@
-import { AmbientLight, Object3D, Scene } from 'three';
+import { Object3D, Scene } from 'three';
 import { GameEngine } from '../GameEngine';
-import { GameObject } from './GameObject';
 
 export abstract class GameScene extends Scene {
-  private readonly objects = new Set<GameObject>();
+  private readonly objects = new Set<Object3D>();
 
   private sceneAssets = new Map<string, unknown>();
 
@@ -11,7 +10,7 @@ export abstract class GameScene extends Scene {
 
   private assetsInitialized = false;
 
-  public get gameObjects(): GameObject[] {
+  public get gameObjects(): Object3D[] {
     if (!this.objectsInitialized) {
       throw new Error("The scene must be initialized before accessing the scene's game objects.");
     }
@@ -31,12 +30,12 @@ export abstract class GameScene extends Scene {
     return this.objectsInitialized && this.assetsInitialized;
   }
 
-  public override add(...object: GameObject[]): this {
+  public override add(...object: Object3D[]): this {
     if (!object || object.length === 0) {
       return this;
     }
 
-    super.add(...object);
+    super.add(...object.filter(obj => !obj.parent));
 
     for (const obj of object) {
       this.objects.add(obj);
@@ -65,7 +64,7 @@ export abstract class GameScene extends Scene {
     this.objectsInitialized = true;
   }
 
-  protected abstract buildInitialGameObjects(gameEngine: GameEngine): GameObject[];
+  protected abstract buildInitialGameObjects(gameEngine: GameEngine): Object3D[];
 
   protected abstract buildStaticObjects(gameEngine: GameEngine): Object3D[];
 

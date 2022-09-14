@@ -114,7 +114,7 @@ export class Sun extends GameObject {
   }
 
   protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
-    const geometry = new SphereGeometry(10900000, 64, 64);
+    const geometry = new SphereGeometry(696340000, 64, 64);
 
     const texture = this.getAsset('sunTexture', Texture);
 
@@ -157,7 +157,7 @@ export class Sun extends GameObject {
 
     const sunAura = new Mesh(auraGeometry, this.materialAura);
 
-    const light = new PointLight(0xffffff, 2, 13000000000, 2);
+    const light = new PointLight(0xffffff, 1, 700000000000); //13000000000, 2);
     sun.add(light);
 
     return sun;

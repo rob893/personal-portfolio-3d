@@ -33,7 +33,7 @@ class EarthClouds extends GameObject {
   protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
     const cloudTex = this.getAsset('cloudTexture', Texture);
 
-    const cloudGeo = new SphereGeometry(101500, 64, 64);
+    const cloudGeo = new SphereGeometry(6400000, 64, 64); // 1 unit is 1 meter
     const cloudMat = new MeshBasicMaterial({
       map: cloudTex,
       side: DoubleSide,
@@ -49,12 +49,11 @@ class EarthClouds extends GameObject {
 
 export class Earth extends GameObject {
   protected getPrefabSettings(): PrefabSettings {
-    // 2325000000 x if distance full scaled
     return {
       name: 'Earth',
       rotation: 0,
       tags: ['earth'],
-      x: 30000000,
+      x: 14960000000, // 1 order of mag less than actual because distances were crazy. One less '0'
       y: 0,
       z: 0
     };
@@ -65,7 +64,7 @@ export class Earth extends GameObject {
   }
 
   protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
-    const geometry = new SphereGeometry(100000, 64, 64);
+    const geometry = new SphereGeometry(6378000, 64, 64); // 1 unit is 1 meter
 
     const texture = this.getAsset('earthTexture', Texture);
     const bump = this.getAsset('earthBump', Texture);

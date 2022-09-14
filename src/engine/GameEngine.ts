@@ -1,4 +1,4 @@
-import { Camera, PerspectiveCamera, Renderer, Scene, Vector3, WebGLRenderer } from 'three';
+import { Camera, Object3D, PerspectiveCamera, Renderer, Scene, Vector3, WebGLRenderer } from 'three';
 import Stats from 'stats.js';
 import { GameObject } from './core/GameObject';
 import { GameScene } from './core/GameScene';
@@ -9,32 +9,38 @@ import { InstantiateOptions } from './core/types/InstantiateOptions';
 
 export class GameEngine {
   public developmentMode: boolean = true;
-  public readonly renderer: Renderer;
+  public readonly renderer: WebGLRenderer;
 
   private gameLoopId: number | null = null;
   private prevFrameTime: number = 0;
   private fpsIntervalInMS: number = 0;
   private fpsCap: number = 60;
   private currentScene: GameScene | null = null;
+  private readonly cameras: Camera[] = [];
   private scenes: GameScene[] = [];
   private currentSceneAssets = new Map<string, unknown>();
 
   private readonly gameObjects: GameObject[] = [];
-  private readonly camera: Camera;
+
+  //private readonly camera: Camera;
   private readonly timeObj: Time;
   private readonly inputObj: Input;
   private readonly stats: Stats;
 
   public constructor() {
     //this.camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1.0, 300000);
-    this.camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 100, Number.MAX_SAFE_INTEGER); //0.0001, 300000); // Number.MAX_SAFE_INTEGER);
+    // const farCamera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 10000, Number.MAX_SAFE_INTEGER);
+    // this.camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 10000); //0.0001, 300000); // Number.MAX_SAFE_INTEGER);
+    // this.camera.add(farCamera);
+    // this.cameras.push(this.camera, farCamera);
     this.renderer = new WebGLRenderer({
       logarithmicDepthBuffer: false
     });
+    this.renderer.autoClear = false;
     this.timeObj = new Time();
     document.body.appendChild(this.renderer.domElement);
     this.inputObj = new Input(this.renderer.domElement);
-    this.camera.position.z = 50;
+    //this.camera.position.z = 50;
     this.stats = new Stats();
     this.stats.showPanel(0);
     this.fpsLimit = 1500;
@@ -54,7 +60,7 @@ export class GameEngine {
   }
 
   public get mainCamera(): Camera {
-    return this.camera;
+    return this.cameras[0];
   }
 
   public get domCanvasElement(): HTMLCanvasElement {
@@ -192,27 +198,28 @@ export class GameEngine {
   }
 
   private resize(): void {
-    if (this.camera instanceof PerspectiveCamera) {
-      this.camera.aspect = window.innerWidth / window.innerHeight;
-      this.camera.updateProjectionMatrix();
+    for (const camera of this.cameras) {
+      if (camera instanceof PerspectiveCamera) {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      }
     }
 
     this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
-  private registerGameObject(newGameObject: GameObject): void {
-    if (!(newGameObject instanceof GameObject)) {
-      return;
+  private registerGameObject(newGameObject: Object3D): void {
+    if (newGameObject instanceof Camera) {
+      this.cameras.push(newGameObject);
     }
 
-    this.gameObjects.push(newGameObject);
-
-    newGameObject.start();
+    if (newGameObject instanceof GameObject) {
+      this.gameObjects.push(newGameObject);
+      newGameObject.start();
+    }
 
     for (const child of newGameObject.children) {
-      if (child instanceof GameObject) {
-        this.registerGameObject(child);
-      }
+      this.registerGameObject(child);
     }
   }
 
@@ -227,7 +234,12 @@ export class GameEngine {
       this.gameObjects[i].update();
     }
 
-    this.renderer.render(this.currentScene, this.mainCamera);
+    this.renderer.clear();
+
+    for (const camera of this.cameras) {
+      this.renderer.render(this.currentScene, camera);
+      this.renderer.clearDepth();
+    }
   }
 
   private gameLoop(timeStamp: number): void {

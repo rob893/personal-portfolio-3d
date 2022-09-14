@@ -1,4 +1,13 @@
-import { AmbientLight, CubeTexture, CubeTextureLoader, Event, Object3D, sRGBEncoding, TextureLoader } from 'three';
+import {
+  AmbientLight,
+  CubeTexture,
+  CubeTextureLoader,
+  Event,
+  Object3D,
+  PerspectiveCamera,
+  sRGBEncoding,
+  TextureLoader
+} from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { GameScene } from '../engine/core/GameScene';
 import earthTexture from '../assets/images/earth/earth.jpg';
@@ -96,9 +105,22 @@ export class SceneOne extends GameScene {
     return assets;
   }
 
-  protected buildInitialGameObjects(gameEngine: GameEngine): GameObject[] {
+  protected buildInitialGameObjects(gameEngine: GameEngine): Object3D[] {
     const getRand = (min: number, max: number): number => Math.random() * (max - min + 1) + min;
+    const farCamera = new PerspectiveCamera(
+      50,
+      window.innerWidth / window.innerHeight,
+      10000000,
+      Number.MAX_SAFE_INTEGER
+    );
+    const midCamera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 10000, 10000000);
+    const nearCamera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 10000);
+    farCamera.add(midCamera, nearCamera);
+
     return [
+      farCamera,
+      midCamera,
+      nearCamera,
       new Skybox({ gameEngine }),
       new Ship({ gameEngine }),
       new PlayerCameraRig({ gameEngine }),

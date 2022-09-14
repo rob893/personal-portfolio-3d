@@ -20,7 +20,7 @@ export class Uranus extends GameObject {
       name: 'Uranus',
       rotation: 0,
       tags: ['Uranus'],
-      x: 576000000,
+      x: 287100000000,
       y: 0,
       z: 0
     };
@@ -31,8 +31,8 @@ export class Uranus extends GameObject {
   }
 
   protected override getModel(_config: GameObjectConstructionParams): Object3D | undefined {
-    const geometry = new SphereGeometry(400000, 64, 64);
-    const ringGeo = new RingGeometry(400000, 680000, 64);
+    const geometry = new SphereGeometry(25362000, 64, 64);
+    const ringGeo = new RingGeometry(25362000, 43115000, 64);
 
     const ringTex = this.getAsset('urRing', Texture);
 
