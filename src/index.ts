@@ -4,6 +4,10 @@ import { SceneOne } from './scenes/SceneOne';
 
 bindLinqToNativeTypes();
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js');
+}
+
 async function main(): Promise<void> {
   const scene = new SceneOne();
   const gameEngine = new GameEngine();

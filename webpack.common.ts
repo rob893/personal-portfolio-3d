@@ -1,5 +1,7 @@
 import { resolve } from 'path';
 import { Configuration } from 'webpack';
+import { GenerateSW } from 'workbox-webpack-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 
@@ -62,6 +64,17 @@ const commonConfig: Configuration = {
     path: resolve(__dirname, 'dist')
   },
   plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: 'src/icons', to: 'icons' },
+        { from: 'src/manifest.json', to: 'manifest.json' }
+      ]
+    }),
+    new GenerateSW({
+      swDest: './sw.js',
+      maximumFileSizeToCacheInBytes: 20000000
+    }),
+
     new HtmlWebpackPlugin({
       title: 'Robert Herber | Software Engineer',
       template: 'src/index.html',

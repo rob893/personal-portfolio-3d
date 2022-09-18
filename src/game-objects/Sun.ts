@@ -91,7 +91,7 @@ export class Sun extends GameObject {
       return;
     }
 
-    this.cubeCamera.update(this.engine.renderer as WebGLRenderer, this.texScene);
+    this.cubeCamera.update(this.engine.renderer, this.texScene);
     this.materialSun.uniforms.uPerlin.value = this.cubeRendererTarget.texture;
     this.materialSun.uniforms.time.value = this.time.totalTime;
 
