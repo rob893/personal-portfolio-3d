@@ -1,9 +1,9 @@
 import { resolve } from 'path';
 import { Configuration } from 'webpack';
 import { GenerateSW } from 'workbox-webpack-plugin';
-import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
 
 const commonConfig: Configuration = {
   entry: './src/index.ts',
@@ -57,6 +57,9 @@ const commonConfig: Configuration = {
     ]
   },
   resolve: {
+    alias: {
+      three: resolve('./node_modules/three')
+    },
     extensions: ['.tsx', '.ts', '.js']
   },
   output: {
@@ -74,7 +77,6 @@ const commonConfig: Configuration = {
       swDest: './sw.js',
       maximumFileSizeToCacheInBytes: 20000000
     }),
-
     new HtmlWebpackPlugin({
       title: 'Robert Herber | Software Engineer',
       template: 'src/index.html',

@@ -10,6 +10,7 @@
     "lint-fix": "eslint . --fix",
     "prettier": "prettier --write **/*.{ts,js,css,html,json} !**/node_modules/** !**/dist/** !**/coverage/** !**/compiled/**",
     "start": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack serve --config webpack.dev.ts --open",
+    "start-prod": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack serve --config webpack.prod.ts --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Robert Herber",

@@ -2,6 +2,8 @@
 import { IArrayExtensions, IEnumerable } from 'typescript-extended-linq';
 
 declare global {
+  const ENVIRONMENT: string;
+
   interface Array<T> extends Omit<IEnumerable<T>, 'forEach' | 'toString' | 'toJSON' | symbol>, IArrayExtensions<T> {}
   interface Int8Array extends Omit<IEnumerable<number>, 'forEach' | 'toString' | 'toJSON' | symbol> {}
   interface Int16Array extends Omit<IEnumerable<number>, 'forEach' | 'toString' | 'toJSON' | symbol> {}
